@@ -3,16 +3,13 @@ package application.server;
 public class Player {
     private int x, y;
     private String name;
-    private String connectionId;
 
-    public Player(String name, String connectionId) {
+    public Player(String name) {
         this.name = name;
-        this.connectionId = connectionId;
     }
 
-    public Player(String name, String connectionId, int x, int y) {
+    public Player(String name, int x, int y) {
         this.name = name;
-        this.connectionId = connectionId;
         this.x = x;
         this.y = y;
     }
@@ -47,11 +44,4 @@ public class Player {
     }
 
 
-    public String getConnectionId() {
-        return connectionId;
-    }
-
-    public void setConnectionId(String connectionId) {
-        this.connectionId = connectionId;
-    }
 }

@@ -7,10 +7,10 @@ import java.util.HashMap;
 import java.util.List;
 
 public class Game {
-    private static final char TILE_FREE = ' '; //TODO: Merge mit Client Simon
-    private static final char TILE_BREAKABLE = 'o'; //TODO: Merge mit Client Simon
-    private static final char TILE_UNBREAKABLE = 'x'; //TODO: Merge mit Client Simon
-    public static final int MAX_PLAYERS = 4; //TODO: Merge mit Server Joel
+    private static final char TILE_FREE = ' ';
+    private static final char TILE_BREAKABLE = 'o';
+    private static final char TILE_UNBREAKABLE = 'x';
+    private static final int MAX_PLAYERS = 4;
 
     private HashMap<String, Player> players;
 
@@ -28,9 +28,11 @@ public class Game {
         return players.containsKey(name);
     }
 
-    public void addPlayer(Player player) {
+    public Player createPlayer(String name) {
+        Player player = new Player(name);
         setPlayerPosition(player, players.size());
-        players.put(player.getName(), player);
+        players.put(name, player);
+        return player;
     }
 
     private void setPlayerPosition(Player player, int count) {
