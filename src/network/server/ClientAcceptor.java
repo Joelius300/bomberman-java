@@ -18,7 +18,6 @@ public class ClientAcceptor implements Runnable {
     private final ExecutorService pool;
     private final ServerSocket serverSocket;
     private final ConcurrentHashMap<String, Socket> clients;
-    private int clientsWaiting = 0;
 
     public ClientAcceptor(ExecutorService pool, ServerSocket serverSocket) {
         this.serverSocket = serverSocket;
@@ -28,17 +27,16 @@ public class ClientAcceptor implements Runnable {
 
     public void run() {
         try {
-            while (clientsWaiting < NetworkServer.MAX_PLAYER_COUNT) {
+            while (clients.size() < NetworkServer.MAX_PLAYER_COUNT) {
                 /*
-                 Zunächst wird eine Client-Anforderung entgegengenommen(accept-Methode).
-                 Der ExecutorService pool liefert einen Thread, auf welchem gehört wird
-                 ob der Client dem Spiel beitritt. Falls ja, wird er zu den Clients hinzugefügt.
+                 Zunï¿½chst wird eine Client-Anforderung entgegengenommen(accept-Methode).
+                 Der ExecutorService pool liefert einen Thread, auf welchem gehï¿½rt wird
+                 ob der Client dem Spiel beitritt. Falls ja, wird er zu den Clients hinzugefï¿½gt.
                 */
                 Socket cs = serverSocket.accept();  //warten auf Client-Anforderung
 
                 //starte den Handler-Thread zur Realisierung der Client-Anforderung
                 pool.execute(new ClientAdder(clients, cs));
-                clientsWaiting++;
             }
         } catch (IOException ex) {
             System.out.println("ClientAcceptor was interrupted");
@@ -64,8 +62,11 @@ public class ClientAcceptor implements Runnable {
                 while(true) {
                     Message message = (Message) objectInputStream.readObject();
                     if (message instanceof JoinGame) {
-                        clients.put(((JoinGame)message).getPlayerName(), client);
-                        break;
+                        String name = ((JoinGame)message).getPlayerName();
+                        if(!clients.containsKey(name)) {
+                            clients.put(name, client);
+                            break;
+                        }
                     }
                 }
             } catch (IOException e) {
