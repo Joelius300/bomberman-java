@@ -1,9 +1,10 @@
 package application.server;
 
 import network.server.Server;
+import network.server.ServerApplicationInterface;
 import protocol.client2server.ClientMessage;
 
-public abstract class Controller {
+public abstract class Controller implements ServerApplicationInterface {
     protected Server server;
     protected Game game;
 
@@ -11,6 +12,4 @@ public abstract class Controller {
         this.server = server;
         this.game = game;
     }
-
-    public abstract void handleMessage(ClientMessage msg, String connectionId);
 }
