@@ -1,9 +1,7 @@
-package application.client.gruppe1.view;
+package application.client.group1.view;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-
-import application.client.gruppe1.controller.KeyPressedListener;
 
 public class BombermanFrame extends JFrame{
 

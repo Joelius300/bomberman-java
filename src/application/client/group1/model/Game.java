@@ -1,17 +1,22 @@
-package application.client.gruppe1.model;
+package application.client.group1.model;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import protocol.server2client.PlayerJoined;
 import protocol.server2client.Update;
+import application.client.group1.model.Player;
 
 public class Game {
+	private static final char TILE_FREE = ' ';
+	private static final char TILE_BREAKABLE = 'o';
+	private static final char TILE_UNBREAKABLE = 'x';
+	private char[][] map;
 	private Player myPlayer;
 	private List <Player> oponents = new ArrayList<Player>();
-	
-	public void createMyPlayer(String playerName) {
-		myPlayer = new Player(playerName);
+	private boolean running;
+	public void createMyPlayer(String playerName, int x, int y) {
+		myPlayer = new Player(playerName, playerName, x, y);
 		
 	}
 
@@ -19,10 +24,10 @@ public class Game {
 		String playerName = message.getPlayerName();
 		int initialX = message.getInitialPositionX();
 		int initialY = message.getInitialPositionY();
-		if(myPlayer.isYourName(playerName)) {
-			myPlayer.setPosition(initialX, initialY);
+		if(myPlayer.getName().equals(playerName)) {
+			myPlayer.setPos(initialX, initialY);
 		} else {
-			Player oponent = new Player(playerName, initialX, initialY);
+			Player oponent = new Player(playerName,playerName, initialX, initialY);
 			oponents.add(oponent);
 		}
 	}
