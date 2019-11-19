@@ -2,16 +2,46 @@ package network.client;
 
 import network.Message;
 
-public class NetworkServerProxy extends ServerProxy {
-    public NetworkServerProxy(ClientApplicationInterface clientApplication) {
-        super(clientApplication);
+import java.io.*;
+import java.net.Socket;
 
-        // start listener wöu gibb het ke ahnig wo dasdmä das darf (hint es isch nid im konstruktor)
-        // immer we listener öppis empfaht -> nachricht deserialisiärä und a clientApplication witer gä (handleMessage)
+public class NetworkServerProxy extends ServerProxy implements Runnable {
+    private final Socket socket;
+
+    public NetworkServerProxy(Socket socket, ClientApplicationInterface clientApplication) {
+        super(clientApplication);
+        this.socket = socket;
     }
 
     @Override
     public void send(Message message) {
-        // send nachricht über netzwärk (per socket) zum server
+        try {
+            // get the output stream from the socket.
+            OutputStream outputStream = socket.getOutputStream();
+            // create an object output stream from the output stream so we can send an object through it
+            ObjectOutputStream objectOutputStream = new ObjectOutputStream(outputStream);
+            // send it through (gets serialized automatically)
+            objectOutputStream.writeObject(message);
+        } catch (IOException e) {
+
+        }
+    }
+
+    public void run() {
+        try {
+            // get the input stream from the connected socket
+            InputStream inputStream = socket.getInputStream();
+            // create a DataInputStream so we can read data from it.
+            ObjectInputStream objectInputStream = new ObjectInputStream(inputStream);
+            while(true) {
+                Message message = (Message) objectInputStream.readObject();
+                clientApplication.handleMessage(message);
+            }
+        } catch (IOException e) {
+
+        }
+        catch (ClassNotFoundException e) {
+
+        }
     }
 }
