@@ -1,4 +1,4 @@
-package application.client.gruppe1.view;
+package application.client.group1.view;
 
 import java.awt.BorderLayout;
 import java.awt.Color;

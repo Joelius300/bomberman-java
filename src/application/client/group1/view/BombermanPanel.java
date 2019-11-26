@@ -1,4 +1,4 @@
-package application.client.gruppe1.view;
+package application.client.group1.view;
 import java.awt.BorderLayout;
 import java.awt.Insets;
 import javax.swing.JButton;
@@ -6,8 +6,8 @@ import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
-import application.client.gruppe1.controller.KeyPressedListener;
-import application.client.gruppe1.controller.LoginPressedListener;
+import application.client.group1.observer.KeyPressedListener;
+import application.client.group1.observer.LoginPressedListener;
 public class BombermanPanel extends JPanel {
 
 	private static final long serialVersionUID = 123701334789462850L;
@@ -23,7 +23,7 @@ public class BombermanPanel extends JPanel {
 	public BombermanPanel() {
 	    setFocusable(true);
 	    setFocusTraversalKeysEnabled(false);
-	    addKeyListener(new KeyPressedListener(playerNameTextField));		
+	    addKeyListener(new KeyPressedListener(playerNameTextField));
 		setLayout(new BorderLayout());
 		headerPanel.setLayout(new BorderLayout());
 		headerPanel.add(playerNameTextField, BorderLayout.CENTER);
@@ -37,7 +37,7 @@ public class BombermanPanel extends JPanel {
 		messageTextArea.setRows(15);
 		messageTextArea.setEditable(false);
 		messageTextArea.setBorder(new EmptyBorder(new Insets(25, 20, 25, 20)));
-		messageTextArea.setText("someone joined");
+		messageTextArea.setText(playerNameTextField + " joined");
 		add(messageTextArea, BorderLayout.SOUTH);
 		
 		loginButton.addMouseListener(new LoginPressedListener(playerNameTextField, loginButton));
