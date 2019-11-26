@@ -28,11 +28,9 @@ public class Game {
         return players.containsKey(name);
     }
 
-    public Player createPlayer(String name, String connectionId) {
-        Player player = new Player(name, connectionId);
+    public void addPlayer(Player player) {
         setPlayerPosition(player, players.size());
-        players.put(name, player);
-        return player;
+        players.put(player.getName(), player);
     }
 
     private void setPlayerPosition(Player player, int count) {
