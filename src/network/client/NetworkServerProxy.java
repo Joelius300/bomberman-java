@@ -51,9 +51,9 @@ public class NetworkServerProxy extends ServerProxy {
                 clientApplication.handleMessage(message);
             }
         } catch (IOException e) {
-            System.out.println("Message could not be received:" + e.getMessage());
+            System.out.println("Message could not be received: " + e.getMessage());
         } catch (ClassNotFoundException e) {
-            System.out.println("Could not cast message:" + e.getMessage());
+            System.out.println("Could not cast message: " + e.getMessage());
         }
     }
 }
