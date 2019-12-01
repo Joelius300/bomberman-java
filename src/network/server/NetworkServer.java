@@ -30,12 +30,13 @@ public class NetworkServer extends Server {
     private void acceptClients() {
         try {
             while (clients.size() < NetworkServer.MAX_PLAYER_COUNT) {
-                Socket cs = serverSocket.accept();  //warten auf Client
+                Socket cs = serverSocket.accept();  // wait for client
                 SocketHandler handler = new SocketHandler(cs);
                 String connectionId = UUID.randomUUID().toString();
                 clients.put(connectionId, handler);
-                // Starte den Handler-Thread zur Weiterleitung der Client-Messages
+                // start handler-thread to receive and forward the client-messages
                 pool.execute(() -> listenToSocket(handler, connectionId));
+                System.out.println("Client with id " + connectionId + " from " + cs.getInetAddress() + " connected to the server.");
             }
         } catch (IOException ex) {
             System.out.println("Was interrupted while accepting the clients.");
@@ -53,9 +54,14 @@ public class NetworkServer extends Server {
         }
 
         // Remove disconnected Socket
+        // Maybe TODO notify that a client disconnected?
         clients.remove(connectionId);
     }
 
+    /*
+    This method is not defined by the contract so probably no one will call
+    it even if it's public. Therefore: TODO make private and move to constructor (although that's bad)
+     */
     public void startListening(){
         new Thread(this::acceptClients).start();
     }
@@ -67,7 +73,6 @@ public class NetworkServer extends Server {
             return;
         }
 
-        // send nachricht über netzwärk (per socket) zum client mit dr richtigä connectionId
         SocketHandler handler = clients.get(connectionId);
         try {
             handler.send(message);
@@ -78,7 +83,6 @@ public class NetworkServer extends Server {
 
     @Override
     public void broadcast(Message message) {
-        // send nachricht über netzwärk (per socket) zu aunä gspichertä clients
         for (Map.Entry<String, SocketHandler> entry:
              clients.entrySet()) {
             try {

@@ -3,45 +3,57 @@ package network.client;
 import network.Message;
 
 import java.io.*;
+import java.net.InetSocketAddress;
 import java.net.Socket;
+import java.net.SocketAddress;
 
-public class NetworkServerProxy extends ServerProxy implements Runnable {
+public class NetworkServerProxy extends ServerProxy {
     private final Socket socket;
+    private final SocketAddress address;
 
-    public NetworkServerProxy(Socket socket, ClientApplicationInterface clientApplication) {
+    private ObjectInputStream objectInputStream;
+    private ObjectOutputStream objectOutputStream;
+
+    public NetworkServerProxy(ClientApplicationInterface clientApplication, SocketAddress address) {
         super(clientApplication);
-        this.socket = socket;
+
+        socket = new Socket();
+        this.address = address;
+    }
+
+    /*
+    This method is not defined by the contract so probably no one will call
+    it even if it's public. Therefore: TODO make private and move to constructor (although that's bad)
+     */
+    public void connect() throws IOException {
+        socket.connect(address);
+        objectInputStream = new ObjectInputStream(socket.getInputStream());
+        objectOutputStream = new ObjectOutputStream(socket.getOutputStream());
+        new Thread(this::listenToSocket).start();
+
+        System.out.println("Connected to " + socket.getInetAddress());
     }
 
     @Override
     public void send(Message message) {
         try {
-            // get the output stream from the socket.
-            OutputStream outputStream = socket.getOutputStream();
-            // create an object output stream from the output stream so we can send an object through it
-            ObjectOutputStream objectOutputStream = new ObjectOutputStream(outputStream);
             // send it through (gets serialized automatically)
             objectOutputStream.writeObject(message);
         } catch (IOException e) {
-
+            System.out.println("The message " + message + "could not be sent: " + e.getMessage());
         }
     }
 
-    public void run() {
+    private void listenToSocket() {
         try {
-            // get the input stream from the connected socket
-            InputStream inputStream = socket.getInputStream();
-            // create a DataInputStream so we can read data from it.
-            ObjectInputStream objectInputStream = new ObjectInputStream(inputStream);
             while(true) {
                 Message message = (Message) objectInputStream.readObject();
                 clientApplication.handleMessage(message);
             }
         } catch (IOException e) {
-
-        }
-        catch (ClassNotFoundException e) {
-
+            System.out.println("Message could not be received:" + e.getMessage());
+        } catch (ClassNotFoundException e) {
+            System.out.println("Could not cast message:" + e.getMessage());
         }
     }
 }
