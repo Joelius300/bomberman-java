@@ -31,4 +31,8 @@ class SocketHandler {
     public boolean isConnected(){
         return clientSocket.isConnected();
     }
+
+    public void close() throws IOException {
+        clientSocket.close();
+    }
 }

@@ -12,24 +12,26 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class NetworkServer extends Server {
-    public static final int MAX_PLAYER_COUNT = 4; // TODO: Nimm vo Server Jannis
-    public static final int SERVER_PORT = 42069;
+    // public static final int MAX_PLAYER_COUNT = 4; // TODO: Nimm vo Server Jannis
+    // public static final int SERVER_PORT = 42069;
 
     private final ExecutorService pool;
-    private final ServerSocket serverSocket;
     private final ConcurrentHashMap<String, SocketHandler> clients;
+    private ServerSocket serverSocket;
+    private final int maxPlayerCount, serverPort;
 
-    public NetworkServer(ServerApplicationInterface serverApplication) throws IOException {
+    public NetworkServer(ServerApplicationInterface serverApplication, int maxPlayerCount, int serverPort) {
         super(serverApplication);
 
-        pool = Executors.newFixedThreadPool(MAX_PLAYER_COUNT);
-        serverSocket = new ServerSocket(SERVER_PORT);
+        pool = Executors.newFixedThreadPool(maxPlayerCount);
         clients = new ConcurrentHashMap<>();
+        this.maxPlayerCount = maxPlayerCount;
+        this.serverPort = serverPort;
     }
 
     private void acceptClients() {
         try {
-            while (clients.size() < NetworkServer.MAX_PLAYER_COUNT) {
+            while (clients.size() < maxPlayerCount) {
                 Socket cs = serverSocket.accept();  // wait for client
                 SocketHandler handler = new SocketHandler(cs);
                 String connectionId = UUID.randomUUID().toString();
@@ -39,7 +41,7 @@ public class NetworkServer extends Server {
                 System.out.println("Client with id " + connectionId + " from " + cs.getInetAddress() + " connected to the server.");
             }
         } catch (IOException ex) {
-            System.out.println("Was interrupted while accepting the clients.");
+            System.out.println("Was interrupted while accepting the clients. The Server was probably closed.");
         }
     }
 
@@ -62,7 +64,8 @@ public class NetworkServer extends Server {
     This method is not defined by the contract so probably no one will call
     it even if it's public. Therefore: TODO make private and move to constructor (although that's bad)
      */
-    public void startListening(){
+    public void startListening() throws IOException {
+        serverSocket = new ServerSocket(serverPort);
         new Thread(this::acceptClients).start();
     }
 
@@ -91,5 +94,14 @@ public class NetworkServer extends Server {
                 System.out.println("Couldn't send message to client " + entry.getKey());
             }
         }
+    }
+
+    public void close() throws IOException {
+        serverSocket.close();
+        for (Map.Entry<String, SocketHandler> entry:
+                clients.entrySet()) {
+            entry.getValue().close();
+        }
+        pool.shutdown();
     }
 }

@@ -46,7 +46,7 @@ public class NetworkServerProxy extends ServerProxy {
 
     private void listenToSocket() {
         try {
-            while(true) {
+            while(socket.isConnected()) {
                 Message message = (Message) objectInputStream.readObject();
                 clientApplication.handleMessage(message);
             }
@@ -55,5 +55,9 @@ public class NetworkServerProxy extends ServerProxy {
         } catch (ClassNotFoundException e) {
             System.out.println("Could not cast message: " + e.getMessage());
         }
+    }
+
+    public void close() throws IOException {
+        socket.close();
     }
 }

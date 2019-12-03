@@ -12,14 +12,14 @@ import java.util.Scanner;
 public class DemoMainServer {
     public static void main(String[] args) throws IOException {
         ServerApplicationInterface fakeServer = (message, connId) -> System.out.println(((JoinGame) message).getPlayerName() + " mit id " + connId + " : sent message");
-        NetworkServer server = new NetworkServer(fakeServer);
+        NetworkServer server = new NetworkServer(fakeServer, 4, 42069);
         server.startListening();
 
         System.out.println("Ready? Press enter to broadcast some messages");
         new Scanner(System.in).nextLine();
 
         // broadcast some demo-messages
-        for (int i = 0; i < NetworkServer.MAX_PLAYER_COUNT; i++){
+        for (int i = 0; i < 4; i++){
             try {
                 server.broadcast(new PlayerJoined("Player"+i, 0,0));
 
@@ -28,5 +28,7 @@ public class DemoMainServer {
                 e.printStackTrace();
             }
         }
+
+        server.close();
     }
 }
