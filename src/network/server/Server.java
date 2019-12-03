@@ -2,6 +2,8 @@ package network.server;
 
 import network.Message;
 
+import java.io.IOException;
+
 /**
  * Diese Klasse definiert die Schnittstelle, welche die Netzwerkschicht der Bomberman-Server-Komponente
  * anbietet. Die Klasse ist abstrakt und muss innerhalb der Netzwerkschicht durch Ableitung implementiert
@@ -41,5 +43,5 @@ public abstract class Server implements AutoCloseable {
    */
   public abstract void broadcast(Message message);
 
-  public abstract void startListening();
+  public abstract void startListening() throws IOException;
 }
