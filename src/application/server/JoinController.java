@@ -24,7 +24,7 @@ public class JoinController extends Controller {
             } else if (game.playerExists(joinMessage.getPlayerName())) {
                 server.send(new ErrorMessage("Der Name wird bereits verwendet."), connectionId);
             } else {
-                Player player = pf.createPlayer(joinMessage.getPlayerName(), connectionId);
+                Player player = pf.getPlayer(joinMessage.getPlayerName(), connectionId);
                 game.addPlayer(player);
                 server.broadcast(new PlayerJoined(player.getName(), player.getX(), player.getY()));
                 if (game.isFull()) {
