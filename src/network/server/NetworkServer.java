@@ -12,8 +12,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class NetworkServer extends Server {
-    // public static final int MAX_PLAYER_COUNT = 4; // TODO: Nimm vo Server Jannis
-    // public static final int SERVER_PORT = 42069;
+    public static final int DEFAULT_SERVER_PORT = 42069;
 
     private final ExecutorService pool;
     private final ConcurrentHashMap<String, SocketHandler> clients;
