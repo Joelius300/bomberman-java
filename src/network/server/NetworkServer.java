@@ -55,14 +55,9 @@ public class NetworkServer extends Server {
         }
 
         // Remove disconnected Socket
-        // Maybe TODO notify that a client disconnected?
         clients.remove(connectionId);
     }
 
-    /*
-    This method is not defined by the contract so probably no one will call
-    it even if it's public. Therefore: TODO make private and move to constructor (although that's bad)
-     */
     public void startListening() throws IOException {
         serverSocket = new ServerSocket(serverPort);
         new Thread(this::acceptClients).start();

@@ -21,10 +21,6 @@ public class NetworkServerProxy extends ServerProxy {
         this.address = address;
     }
 
-    /*
-    This method is not defined by the contract so probably no one will call
-    it even if it's public. Therefore: TODO make private and move to constructor (although that's bad)
-     */
     public void connect() throws IOException {
         socket.connect(address);
         objectInputStream = new ObjectInputStream(socket.getInputStream());
