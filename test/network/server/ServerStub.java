@@ -1,18 +1,19 @@
 package network.server;
 
+import java.io.IOException;
 import java.util.Scanner;
 
 import network.Message;
 
 /**
  * Die Klasse ServerStub dient dazu die Teilkomponente application.server isoliert von der
- * Netzwerkschicht testen zu können. Hierzu muss ein Objekt von dieser Klasse erzeugt werden.
+ * Netzwerkschicht testen zu kï¿½nnen. Hierzu muss ein Objekt von dieser Klasse erzeugt werden.
  * Dabei wird ein separater Thread gestartet, welche den Empfang von Meldungen von den Clients
  * simuliert. In der Methode deliverMessageToServer() kann programmiert werden, welche Meldungen
  * dies konkret sind. Die Methode wartet mit der Auslieferung, bis der Benutzer die Taste
- * ENTER drückt. Dies kann je nach Situation hilfreich sein beim Testen. Die Methode kann aber
- * beliebig an die Bedürfnisse des Tests angepasst werden. 
- * Der Server-Komponente selber stehen die send-Methode und die broadcast-Methode zur Verfügung,
+ * ENTER drï¿½ckt. Dies kann je nach Situation hilfreich sein beim Testen. Die Methode kann aber
+ * beliebig an die Bedï¿½rfnisse des Tests angepasst werden. 
+ * Der Server-Komponente selber stehen die send-Methode und die broadcast-Methode zur Verfï¿½gung,
  * um eine Antwort an einen oder alle Clients zu simulieren. Die Meldung wird lediglich auf der
  * Konsole ausgegeben.
  * 
@@ -58,19 +59,29 @@ public class ServerStub extends Server {
   public void broadcast(Message message) {
     System.out.println(message);
   }
-  
+
+  @Override
+  public void startListening() throws IOException {
+    System.out.println("Server now listening..");
+  }
+
   /**
    * Wartet auf eine Eingabe von der Konsole (ENTER-Taste). Anschliessend werden die weiteren 
-   * Anweisungen ausgeführt. Z.B. können Meldungen an den Server ausgeliefert werden, indem die Methode
-   * handleMessage() bei der Server-Komponente aufgerufen wird. Diese Methode kann den Bedürfnissen
+   * Anweisungen ausgefï¿½hrt. Z.B. kï¿½nnen Meldungen an den Server ausgeliefert werden, indem die Methode
+   * handleMessage() bei der Server-Komponente aufgerufen wird. Diese Methode kann den Bedï¿½rfnissen
    * des Tests angepasst werden.
    */
   private void deliverMessagesToServer() {
-    System.out.println("Drücken Sie ENTER, um die Auslieferung der Meldungen an den Server zu starten.");
+    System.out.println("Drï¿½cken Sie ENTER, um die Auslieferung der Meldungen an den Server zu starten.");
     new Scanner(System.in).nextLine();
-    // Hier können Sie die Meldungen, welche nach dem Drücken der ENTER-Taste an Ihren Server gesendet
+    // Hier kï¿½nnen Sie die Meldungen, welche nach dem Drï¿½cken der ENTER-Taste an Ihren Server gesendet
     // werden sollen programmieren. Z.B.:
     // Message message = new JoinGame("TestA");
     // serverApplication.handleMessage(message, "connection1");
+  }
+
+  @Override
+  public void close() throws Exception {
+    System.out.println("Server closed");
   }
 }

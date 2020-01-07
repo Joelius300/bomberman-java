@@ -2,16 +2,18 @@ package network.client;
 
 import network.Message;
 
+import java.io.IOException;
+
 /**
  * Die Klasse ServerProxyStub ist von ServerProxy abgeleitet und dient dazu den Client
- * isoliert von der Netzwerkschicht testen zu können. Hierzu muss der Client ein Objekt
+ * isoliert von der Netzwerkschicht testen zu kï¿½nnen. Hierzu muss der Client ein Objekt
  * von dieser Klasse erzeugen. Er kann dann die send-Methode aufrufen. Damit kann das 
  * Senden einer Meldung an den Server simuliert werden. Die Meldung wird lediglich auf
- * der Konsole ausgegeben. Die send-Methode kann den Testbedürfnissen entsprechend
- * angepasst werden. Insbesondere können aus der send-Methode heraus Antworten vom 
+ * der Konsole ausgegeben. Die send-Methode kann den Testbedï¿½rfnissen entsprechend
+ * angepasst werden. Insbesondere kï¿½nnen aus der send-Methode heraus Antworten vom 
  * Server simuliert werden. Hierzu steht die Methode deliverResponseMessageToClient
- * zur Verfügung. Diese liefert eine beliebige Meldung an den Client aus und benützt
- * dafür einen separaten Thread, so wie dies auch mit der richtigen Netzwerkschicht
+ * zur Verfï¿½gung. Diese liefert eine beliebige Meldung an den Client aus und benï¿½tzt
+ * dafï¿½r einen separaten Thread, so wie dies auch mit der richtigen Netzwerkschicht
  * der Fall sein wird.
  * 
  * @author Andres Scheidegger
@@ -30,7 +32,7 @@ public class ServerProxyStub extends ServerProxy {
 
   /**
    * Kann vom Client aufgerufen werden, um den Versand einer Meldung zu simulieren. 
-   * Kann den Testbedürfnissen entsprechend angepasst werden.
+   * Kann den Testbedï¿½rfnissen entsprechend angepasst werden.
    * @see network.client.ServerProxy#send(network.Message)
    */
   @Override
@@ -41,8 +43,13 @@ public class ServerProxyStub extends ServerProxy {
     // deliverResponseMessageToClient(playerJoinedMessage);
   }
 
+  @Override
+  public void connect() throws IOException {
+    System.out.println("Client connected");
+  }
+
   /**
-   * Simuliert den Empfang einer Meldeung vom Server über das Netzwerk.
+   * Simuliert den Empfang einer Meldeung vom Server ï¿½ber das Netzwerk.
    * @param responseMessage Das Meldungsobjekt, welches an den Client ausgeliefert
    *                        werden soll.
    */
@@ -54,5 +61,10 @@ public class ServerProxyStub extends ServerProxy {
       }
     };
     responseThread.start();
+  }
+
+  @Override
+  public void close() throws Exception {
+    System.out.println("Client closed");
   }
 }
