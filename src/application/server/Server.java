@@ -7,7 +7,7 @@ import java.io.IOException;
 
 public class Server {
 
-    private Controller joinController;
+    private Controller controller;
 
     public static void main(String[] args) {
         new Server();
@@ -21,7 +21,7 @@ public class Server {
                     .WithPort(NetworkServer.DEFAULT_SERVER_PORT)
                     .BuildAndStartListening();
             Game g = new Game();
-            joinController = new JoinController(server, g);
+            controller = new JoinController(server, g);
             g.setRunning(true);
 
         } catch (IOException e) {
