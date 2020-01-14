@@ -69,7 +69,6 @@ public class Game {
         }
     }
 
-    //TODO: das
     public List<Player> handleBombExplosion(int x, int y) {
         List<Player> killedPlayers = new ArrayList<>();
         return null;
